@@ -1,5 +1,22 @@
+import requests
+espn_rankings_url = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/rankings"
+
+def get_rankings():
+    response = requests.get(espn_rankings_url)
+    response.raise_for_status()
+    data = response.json()
 
 
+    rankings_dict = {}
+    # Getting the AP Poll rankings (more used in CFB season)
+    ranks = data["rankings"][0]["ranks"]
+
+    for entry in ranks:
+        team_id = entry["team"]["id"]
+        rank = entry["current"]
+        rankings_dict[team_id] = rank
+
+    return rankings_dict
 previous_games = {}
 
 def detect_scoring_event(old_score, new_score):
